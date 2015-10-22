@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Hello World</title>
+    </head>
+    <body>
+        <h1>FUCK THIS WORLD!!!</h1>
+	 We are using NODE.JS <script>document.write(process.version)</script>
+    </body>
+</html>
+
+ 
+
+
