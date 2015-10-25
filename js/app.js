@@ -1,30 +1,30 @@
-var ghNotifier = angular.module('ghNotifier', []);
-var gitEvent = [];
 var socket = io("https://ghnotifier.herokuapp.com/");
+var ghNotifier = angular.module('ghNotifier', ['ngRoute']);
 
-ghNotifier.controller('mainC', function ($scope) {
-    $scope.github = [];
-    $scope.teste = 'teste';
-    socket.on('newuser', function (res) {
-        console.log(res.message);
+ghNotifier.config(function ($routeProvider, $locationProvider) {
+    $routeProvider.
+    when('/home', {
+        templateUrl: 'views/home.html',
+        controller: 'MainController'
+    }).
+    when('/issues', {
+        templateUrl: 'views/issues.html',
+        controller: 'IssuesController'
+    }).
+    otherwise({
+        redirectTo: 'views/home.html'
     });
 
-    socket.on('header', function (res) {
-        console.log(res.new);
-    });
+    //$locationProvider.html5Mode(true);
+});
 
-    socket.on('githubevent', function (res) {
-        console.log(res);
-        // var o = {
-        //     title: res.new.issue.title,
-        //     state: res.new.issue.state,
-        //     image: res.new.issue.user.avatar_url,
-        //     login: res.new.issue.user.login,
-        //     update: res.new.issue.update_at,
-        //     link: res.new.issue.html_url
-        // };
-        // $scope.github.push(o);
-        // console.log($scope.github);
-        // $scope.$apply();
-    });
+ghNotifier.controller('MainController', function ($scope, $route, $routeParams, $location) {
+    $scope.message = 'MainController screen';
+    $scope.$route = $route;
+    $scope.$location = $location;
+    $scope.$routeParams = $routeParams;
+});
+
+ghNotifier.controller('IssuesController', function ($scope) {
+    $scope.message = 'IssuesController screen';
 });
