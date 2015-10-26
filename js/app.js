@@ -26,50 +26,66 @@ ghNotifier.factory('IO', function () {
     return service;
 });
 
-ghNotifier.factory('IssuesDb', ['$http', 'IO',
-    function ($http, IO) {
-        var socket = IO.getSocket();
-        var service = {};
-        var data;
+ghNotifier.factory('total', function () {
+    var issues;
+    var total = {};
 
-        service.getIssues = function (callback) {
-            $http.get('https://ghnotifier.herokuapp.com/action/issues').
-            then(function (response) {
-                data = response;
-                if (callback) {
-                    callback(data);
-                }
-            });
+
+    total.issues = function (n) {
+        this.issues = n;
+    }
+})
+
+ghNotifier.service('db', ['$http', 'IO', '$rootScope',
+
+    function ($http, IO, $rootScope) {
+        var _data;
+
+        this.getData = function () {
+            return _data;
         }
 
-        return service;
+        function getJson(callback) {
+            $http.get('https://ghnotifier.herokuapp.com/action/issues').
+            success(function (data) {
+                _data = data;
+                $rootScope.$broadcast('dataupdated');
+            }).error(function (error) {
+                console.log(error);
+            });
+        };
+
+        IO.getSocket().on('newItem', function (message) {
+            console.log('A ' + message.item + ' action has been arrived!');
+            getJson(function (data) {
+                console.log(data);
+                this._data = data;
+            });
+        });
+
+        getJson();
+
     }
 ]);
 
-ghNotifier.controller('MainController', function ($scope, IO, IssuesDb) {
+ghNotifier.controller('MainController', function ($scope, IO, db) {
+
     var socket = IO.getSocket();
     socket.on('newuser', function (response) {
         console.log(response.message + '\n' +
             'id: ' + response.id + '\n' +
-            'ip: ' + response.ip + ':' + response.port + '\n' +
+            'ip:' + response.ip + ':' + response.port + '\n' +
             'time: ' + response.timestamp
         );
     });
+
 });
 
-ghNotifier.controller('IssuesController', function ($scope, IO, IssuesDb) {
-    var socket = IO.getSocket();
+ghNotifier.controller('IssuesController', function ($scope, IO, db, $rootScope) {
 
-    function getIssues() {
-        IssuesDb.getIssues(function (data) {
-            $scope.issues = data;
-        });
-    }
+    $rootScope.$on('dataupdated', function () {
+        console.log('disparado');
+        $scope.issues = db.getData();
+    }());
 
-    socket.on('newItem', function (response) {
-        console.log('New ' + response.item + ' has added.');
-        getIssues();
-    });
-
-    getIssues();
 });
