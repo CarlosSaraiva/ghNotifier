@@ -11,10 +11,9 @@ ghNotifier.config(function ($routeProvider, $locationProvider) {
         controller: 'IssuesController'
     }).
     otherwise({
-        redirectTo: 'views/home.html'
+        templateUrl: 'views/home.html',
+        controller: 'MainController'
     });
-
-    //$locationProvider.html5Mode(true);
 });
 
 ghNotifier.factory('IO', function () {
