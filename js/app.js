@@ -30,7 +30,6 @@ ghNotifier.factory('total', function () {
     var issues;
     var total = {};
 
-
     total.issues = function (n) {
         this.issues = n;
     }
@@ -62,9 +61,7 @@ ghNotifier.service('db', ['$http', 'IO', '$rootScope',
                 this._data = data;
             });
         });
-
         getJson();
-
     }
 ]);
 
@@ -83,9 +80,15 @@ ghNotifier.controller('MainController', function ($scope, IO, db) {
 
 ghNotifier.controller('IssuesController', function ($scope, IO, db, $rootScope) {
 
+    var getIssues = function () {
+        $scope.issues = db.getData();
+    };
+
+    getIssues();
+
     $rootScope.$on('dataupdated', function () {
         console.log('disparado');
-        $scope.issues = db.getData();
-    }());
+        getIssues();
+    });
 
 });

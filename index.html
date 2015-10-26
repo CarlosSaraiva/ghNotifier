@@ -5,6 +5,7 @@
         <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <!-- <link rel="stylesheet" type="text/css" href="bower_components/bootstrap/dist/css/bootstrap.css"> -->
+        <link rel="stylesheet" type="text/css" href="css/reset.css">
         <link rel="stylesheet" type="text/css" href="css/style.css">
         <script src="bower_components/jquery/dist/jquery.js"></script>
         <script src="bower_components/bootstrap/dist/js/bootstrap.js"></script>
@@ -14,23 +15,22 @@
         <script src="js/app.js"></script>
         <title>Hello World</title>
     </head >
-    <body ng-app="ghNotifier">
-        <div class="container">
-    <ul class="nav nav-tabs">
-        <li><a href="#home">HOME</a></li>
-        <li> <a href="#issues">ISSUES</a></li>
-    </ul>
-            <div class="row">
-                <div class="col-md-3">
-                </div>
-                    <div class="col-md-9">
-                        <div data-ui-view="#home">
-                        <div ng-view></div>
-                    </div>
 
-            </div>
+    <body ng-app="ghNotifier">
+        <ul>
+            <li><a href='#home'>HOME</a></li>
+            <li><a href='#issues'>ISSUES</a></li>
+        </ul>
+        <div id='container'>
+
+            <div id="header"></div>
+            <div id="left" ng-view></div>
+            <div id="center"></div>
+            <div id="footer"></div>
         </div>
-</div>
+
+        <div ng-view></div>
+
     </body>
 <script>
 
