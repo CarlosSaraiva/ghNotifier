@@ -23,6 +23,15 @@ ghNotifier.factory('IO', function () {
     service.getSocket = function () {
         return socket;
     }
+
+    socket.on('newuser', function (response) {
+        console.log(response.message + '\n' +
+            'id: ' + response.id + '\n' +
+            'ip:' + response.ip + ':' + response.port + '\n' +
+            'time: ' + response.timestamp
+        );
+    });
+
     return service;
 });
 
@@ -48,6 +57,7 @@ ghNotifier.service('db', ['$http', 'IO', '$rootScope',
             $http.get('https://ghnotifier.herokuapp.com/action/issues').
             success(function (data) {
                 _data = data;
+                console.log(data);
                 $rootScope.$broadcast('dataupdated');
             }).error(function (error) {
                 console.log(error);
@@ -66,29 +76,13 @@ ghNotifier.service('db', ['$http', 'IO', '$rootScope',
 ]);
 
 ghNotifier.controller('MainController', function ($scope, IO, db) {
-
     var socket = IO.getSocket();
-    socket.on('newuser', function (response) {
-        console.log(response.message + '\n' +
-            'id: ' + response.id + '\n' +
-            'ip:' + response.ip + ':' + response.port + '\n' +
-            'time: ' + response.timestamp
-        );
-    });
-
 });
 
 ghNotifier.controller('IssuesController', function ($scope, IO, db, $rootScope) {
-
-    var getIssues = function () {
-        $scope.issues = db.getData();
-    };
-
-    getIssues();
-
     $rootScope.$on('dataupdated', function () {
         console.log('disparado');
-        getIssues();
+        $scope.issues = db.getData();
     });
-
+    $scope.issues = db.getData();
 });

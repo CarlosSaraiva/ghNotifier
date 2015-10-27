@@ -1,42 +1,10 @@
-<link rel="stylesheet" href="css/pinterest.css">
-<script src="bower_components/jquery/dist/jquery.js"></script>
-<br><br><br><br>
-<div class="row">
-  <div class="col_md_12">
-    <section id="pinBoot">
-
-      <article class="white-panel" >
-        <!-- <img src="http://i.imgur.com/sDLIAZD.png" alt=""> -->
-        <h2><center>29</center></h2>
-        <h4><a href="#issues"><center>ISSUES</center></a></h4>
-        <p> </p>
-      </article>
-
-      <article class="white-panel" >
-        <!-- <img src="http://i.imgur.com/sDLIAZD.png" alt=""> -->
-        <h2><center>29</center></h2>
-        <h4><a href="#push"><center>PUSH</center></a></h4>
-        <p> </p>
-      </article>
-
-      <article class="white-panel" >
-        <!-- <img src="http://i.imgur.com/sDLIAZD.png" alt=""> -->
-        <h2><center>29</center></h2>
-        <h4><a href="#COMMENTS"><center>COMMENTS</center></a></h4>
-        <p> </p>
-      </article>
-
-  </section>
-  </div>
-</div>
-<script>
-$(document).ready(function() {
-  $('#pinBoot').pinterest_grid({
-    no_columns: 4,
-    padding_x: 10,
-    padding_y: 10,
-    margin_bottom: 50,
-    single_column_breakpoint: 100
+$(document).ready(function () {
+    $('#pinBoot').pinterest_grid({
+        no_columns: 4,
+        padding_x: 10,
+        padding_y: 10,
+        margin_bottom: 50,
+        single_column_breakpoint: 700
     });
 });
 
@@ -64,7 +32,8 @@ http://www.jqueryscript.net/layout/Simple-jQuery-Plugin-To-Create-Pinterest-Styl
 
 
 */
-;(function ($, window, document, undefined) {
+;
+(function ($, window, document, undefined) {
     var pluginName = 'pinterest_grid',
         defaults = {
             padding_x: 10,
@@ -79,7 +48,7 @@ http://www.jqueryscript.net/layout/Simple-jQuery-Plugin-To-Create-Pinterest-Styl
 
     function Plugin(element, options) {
         this.element = element;
-        this.options = $.extend({}, defaults, options) ;
+        this.options = $.extend({}, defaults, options);
         this._defaults = defaults;
         this._name = pluginName;
         this.init();
@@ -89,16 +58,16 @@ http://www.jqueryscript.net/layout/Simple-jQuery-Plugin-To-Create-Pinterest-Styl
         var self = this,
             resize_finish;
 
-        $(window).resize(function() {
+        $(window).resize(function () {
             clearTimeout(resize_finish);
-            resize_finish = setTimeout( function () {
+            resize_finish = setTimeout(function () {
                 self.make_layout_change(self);
             }, 11);
         });
 
         self.make_layout_change(self);
 
-        setTimeout(function() {
+        setTimeout(function () {
             $(window).resize();
         }, 500);
     };
@@ -109,21 +78,21 @@ http://www.jqueryscript.net/layout/Simple-jQuery-Plugin-To-Create-Pinterest-Styl
             row = 0,
             $container = $(this.element),
             container_width = $container.width();
-            $article = $(this.element).children();
+        $article = $(this.element).children();
 
-        if(single_column_mode === true) {
+        if (single_column_mode === true) {
             article_width = $container.width() - self.options.padding_x;
         } else {
             article_width = ($container.width() - self.options.padding_x * self.options.no_columns) / self.options.no_columns;
         }
 
-        $article.each(function() {
+        $article.each(function () {
             $(this).css('width', article_width);
         });
 
         columns = self.options.no_columns;
 
-        $article.each(function(index) {
+        $article.each(function (index) {
             var current_column,
                 left_out = 0,
                 top = 0,
@@ -131,30 +100,30 @@ http://www.jqueryscript.net/layout/Simple-jQuery-Plugin-To-Create-Pinterest-Styl
                 prevAll = $this.prevAll(),
                 tallest = 0;
 
-            if(single_column_mode === false) {
+            if (single_column_mode === false) {
                 current_column = (index % columns);
             } else {
                 current_column = 0;
             }
 
-            for(var t = 0; t < columns; t++) {
-                $this.removeClass('c'+t);
+            for (var t = 0; t < columns; t++) {
+                $this.removeClass('c' + t);
             }
 
-            if(index % columns === 0) {
+            if (index % columns === 0) {
                 row++;
             }
 
             $this.addClass('c' + current_column);
             $this.addClass('r' + row);
 
-            prevAll.each(function(index) {
-                if($(this).hasClass('c' + current_column)) {
+            prevAll.each(function (index) {
+                if ($(this).hasClass('c' + current_column)) {
                     top += $(this).outerHeight() + self.options.padding_y;
                 }
             });
 
-            if(single_column_mode === true) {
+            if (single_column_mode === true) {
                 left_out = 0;
             } else {
                 left_out = (index % columns) * (article_width + self.options.padding_x);
@@ -162,7 +131,7 @@ http://www.jqueryscript.net/layout/Simple-jQuery-Plugin-To-Create-Pinterest-Styl
 
             $this.css({
                 'left': left_out,
-                'top' : top
+                'top': top
             });
         });
 
@@ -174,9 +143,9 @@ http://www.jqueryscript.net/layout/Simple-jQuery-Plugin-To-Create-Pinterest-Styl
         var column_heights = [],
             largest = 0;
 
-        for(var z = 0; z < columns; z++) {
+        for (var z = 0; z < columns; z++) {
             var temp_height = 0;
-            _container.find('.c'+z).each(function() {
+            _container.find('.c' + z).each(function () {
                 temp_height += $(this).outerHeight();
             });
             column_heights[z] = temp_height;
@@ -187,7 +156,7 @@ http://www.jqueryscript.net/layout/Simple-jQuery-Plugin-To-Create-Pinterest-Styl
     };
 
     Plugin.prototype.make_layout_change = function (_self) {
-        if($(window).width() < _self.options.single_column_breakpoint) {
+        if ($(window).width() < _self.options.single_column_breakpoint) {
             _self.calculate(true);
         } else {
             _self.calculate(false);
@@ -198,12 +167,9 @@ http://www.jqueryscript.net/layout/Simple-jQuery-Plugin-To-Create-Pinterest-Styl
         return this.each(function () {
             if (!$.data(this, 'plugin_' + pluginName)) {
                 $.data(this, 'plugin_' + pluginName,
-                new Plugin(this, options));
+                    new Plugin(this, options));
             }
         });
     }
 
 })(jQuery, window, document);
-
-</script>
-

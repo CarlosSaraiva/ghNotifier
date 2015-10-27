@@ -1,38 +1,53 @@
 <!DOCTYPE html>
-
-<html >
+<html lang="en" >
     <head>
-        <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+        <meta http-equintent-Type" content="text/html;charset=utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1">
-        <!-- <link rel="stylesheet" type="text/css" href="bower_components/bootstrap/dist/css/bootstrap.css"> -->
-        <link rel="stylesheet" type="text/css" href="css/reset.css">
-        <link rel="stylesheet" type="text/css" href="css/style.css">
+         <!-- <link rel="stylesheet" type="text/css" href="bower_components/bootstrap/dist/css/bootstrap.css"> -->
+        <!-- <link href="https://maxcdn.bootstrapcdn.com/bootswatch/3.3.5/yeti/bootstrap.min.css" rel="stylesheet" integrity="sha256-gJ9rCvTS5xodBImuaUYf1WfbdDKq54HCPz9wk8spvGs= sha512-weqt+X3kGDDAW9V32W7bWc6aSNCMGNQsdOpfJJz/qD/Yhp+kNeR+YyvvWojJ+afETB31L0C4eO0pcygxfTgjgw==" crossorigin="anonymous"> -->
+        <link href="https://maxcdn.bootstrapcdn.com/bootswatch/3.3.5/paper/bootstrap.min.css" rel="stylesheet" integrity="sha256-hMIwZV8FylgKjXnmRI2YY0HLnozYr7Cuo1JvRtzmPWs= sha512-k+wW4K+gHODPy/0gaAMUNmCItIunOZ+PeLW7iZwkDZH/wMaTrSJTt7zK6TGy6p+rnDBghAxdvu1LX2Ohg0ypDw==" crossorigin="anonymous">
+        <!-- <link rel="stylesheet" type="text/css" href="css/reset.css"> -->
+        <!-- <link rel="stylesheet" type="text/css" href="css/style.css"> -->
+        <link rel="stylesheet" href="css/pinterest.css">
         <script src="bower_components/jquery/dist/jquery.js"></script>
         <script src="bower_components/bootstrap/dist/js/bootstrap.js"></script>
         <script src="bower_components/angular/angular.js"></script>
         <script src="bower_components/angular-route/angular-route.js"></script>
         <script src="https://cdn.socket.io/socket.io-1.3.7.js"></script>
         <script src="js/app.js"></script>
+        <!-- <script src="js/pinterest.js"></script> -->
         <title>Hello World</title>
     </head >
-
-    <body ng-app="ghNotifier">
-        <ul>
-            <li><a href='#home'>HOME</a></li>
-            <li><a href='#issues'>ISSUES</a></li>
-        </ul>
-        <div id='container'>
-
-            <div id="header"></div>
-            <div id="left" ng-view></div>
-            <div id="center"></div>
-            <div id="footer"></div>
+<body ng-app="ghNotifier">
+<nav role="navigation" class="navbar navbar-default navbar-fixed-top">
+    <div class="container">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header">
+            <button type="button" data-target="#navbarCollapse" data-toggle="collapse" class="navbar-toggle">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a href="#" class="navbar-brand">Brand</a>
         </div>
+        <!-- Collection of nav links and other content for toggling -->
+        <div id="navbarCollapse" class="collapse navbar-collapse">
+            <ul class="nav navbar-nav">
+                <li class="active"><a href="#home">HOME</a></li>
+                <li><a href="#issues">ISSUES</a></li>
+            </ul>
+            <ul class="nav navbar-nav navbar-right">
+                <li><a href="#">Not.</a></li>
+            </ul>
+        </div>
+    </div>
+</nav>
+            <div class="container">
 
-        <div ng-view></div>
+                    <ng-view>
 
+            </div>
+        </div>
     </body>
-<script>
-
-</script>
 </html>
