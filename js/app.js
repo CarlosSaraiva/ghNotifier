@@ -18,6 +18,7 @@ ghNotifier.config(function ($routeProvider, $locationProvider) {
 
 ghNotifier.factory('IO', function () {
     var socket = io("https://ghnotifier.herokuapp.com/");
+    //var socket = io("http:localhost:3001/");
     var service = {};
 
     service.getSocket = function () {
@@ -35,39 +36,40 @@ ghNotifier.factory('IO', function () {
     return service;
 });
 
-ghNotifier.factory('total', function () {
-    var issues;
-    var total = {};
-
-    total.issues = function (n) {
-        this.issues = n;
-    }
-})
-
 ghNotifier.service('db', ['$http', 'IO', '$rootScope',
-
     function ($http, IO, $rootScope) {
         var _data;
+        var _counter;
 
         this.getData = function () {
             return _data;
+        }
+
+        this.getCounter = function () {
+            return _counter;
         }
 
         function getJson(callback) {
             $http.get('https://ghnotifier.herokuapp.com/action/issues').
             success(function (data) {
                 _data = data;
-                console.log(data);
                 $rootScope.$broadcast('dataupdated');
+                console.log('dataupdated event triggered')
             }).error(function (error) {
                 console.log(error);
             });
         };
 
+        IO.getSocket().on('onDbCount', function (groupBy) {
+            _counter = groupBy;
+            console.log(groupBy);
+            $rootScope.$broadcast('counterupdated');
+            console.log('onDbCount io event triggered');
+        });
+
         IO.getSocket().on('newItem', function (message) {
             console.log('A ' + message.item + ' action has been arrived!');
             getJson(function (data) {
-                console.log(data);
                 this._data = data;
             });
         });
@@ -75,13 +77,19 @@ ghNotifier.service('db', ['$http', 'IO', '$rootScope',
     }
 ]);
 
-ghNotifier.controller('MainController', function ($scope, IO, db) {
+ghNotifier.controller('MainController', function ($scope, IO, db, $rootScope) {
     var socket = IO.getSocket();
+    $rootScope.$on('counterupdated', function () {
+        $scope.counter = db.getCounter().groupBy;
+    });
+
+    if (db.getCounter()) {
+        $scope.counter = db.getCounter().groupBy;
+    }
 });
 
 ghNotifier.controller('IssuesController', function ($scope, IO, db, $rootScope) {
     $rootScope.$on('dataupdated', function () {
-        console.log('disparado');
         $scope.issues = db.getData();
     });
     $scope.issues = db.getData();
