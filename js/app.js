@@ -17,8 +17,8 @@ ghNotifier.config(function ($routeProvider, $locationProvider) {
 });
 
 ghNotifier.factory('IO', function () {
-    var socket = io("https://ghnotifier.herokuapp.com/");
-    //var socket = io("http:localhost:3001/");
+    //var socket = io("https://ghnotifier.herokuapp.com/");
+    var socket = io("http://localhost:3001/");
     var service = {};
 
     service.getSocket = function () {
@@ -40,6 +40,7 @@ ghNotifier.service('db', ['$http', 'IO', '$rootScope',
     function ($http, IO, $rootScope) {
         var _data;
         var _counter;
+        var socket = IO.getSocket();
 
         this.getData = function () {
             return _data;
@@ -54,23 +55,30 @@ ghNotifier.service('db', ['$http', 'IO', '$rootScope',
             success(function (data) {
                 _data = data;
                 $rootScope.$broadcast('dataupdated');
-                console.log('dataupdated event triggered')
+                console.log('ng - Event \'dataupdated\'  triggered.')
             }).error(function (error) {
                 console.log(error);
             });
         };
 
-        IO.getSocket().on('onDbCount', function (groupBy) {
+        socket.on('ondbgroupby', function (groupBy) {
+            console.log('io - Event \'ondbgroupby\' triggered ');
             _counter = groupBy;
-            console.log(groupBy);
             $rootScope.$broadcast('counterupdated');
-            console.log('onDbCount io event triggered');
+            console.log('ng - Event \'ondbgroupby\' triggered ');
+            socket.emit('test ', {
+                status: true
+            });
         });
 
-        IO.getSocket().on('newItem', function (message) {
-            console.log('A ' + message.item + ' action has been arrived!');
+        socket.on('onnewrequest ', function (d) {
+            console.log(d);
             getJson(function (data) {
                 this._data = data;
+            });
+
+            socket.emit('message ', {
+                status: true
             });
         });
         getJson();
@@ -79,12 +87,12 @@ ghNotifier.service('db', ['$http', 'IO', '$rootScope',
 
 ghNotifier.controller('MainController', function ($scope, IO, db, $rootScope) {
     var socket = IO.getSocket();
-    $rootScope.$on('counterupdated', function () {
+    $rootScope.$on('ondbgroupby', function () {
         $scope.counter = db.getCounter().groupBy;
     });
 
     if (db.getCounter()) {
-        $scope.counter = db.getCounter().groupBy;
+        $scope.counter = db.getCounter();
     }
 });
 
