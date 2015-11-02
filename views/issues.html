@@ -1,3 +1,67 @@
-<ol>
-    <li ng-repeat="issue in issues| limitTo:10 | orderBy:predicate:reverse">{{issue._id}}</li>
-</ol>
+<!-- Wide card with share menu button -->
+<style>
+.cartao{
+  padding-left: 15%;
+  height: ;
+}
+.demo-card-wide.mdl-card {
+  width: 512px;
+  height: 30px;
+}
+.demo-card-wide > .mdl-card__title {
+  color: "grey";
+  height: 50px;
+  padding-bottom: 1px;
+}
+.demo-card-wide > .mdl-card__menu {
+  color: grey;
+  background-color:; grey
+}
+
+.mdl-card__title > .mdl-card__subtitle-text {
+
+}
+
+.gravatar{
+  float:left;
+  width: 100px;
+  height: 100px;
+
+}
+
+.text{
+  position: realative;
+  float:left;
+  width: auto;
+  padding-left: 20px;
+  margin-left: inherit;
+  text-align: left;
+  left: auto;
+
+
+}
+
+</style>
+<br><br><br><br><br><br><br>
+<div ng-repeat="action in actions" class="cartao">
+<br>
+  <div class="demo-card-wide mdl-card mdl-shadow--2dp through mdl-shadow--16dp">
+
+    <div class="mdl-card__title mdl-card--border">
+      <a href={{ action.request.issue.home_url }} class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect"><h2 class="mdl-card__title-text">     #{{action.request.issue.number}} </h2></a>
+        <h6 class="mdl-card__subtitle-text">{{action.request.issue.title}} </h6>
+    </div>
+
+  <div class="demo-card mdl-card--border ">
+
+      <div class="mdl-card__media gravatar" >
+          <img src="{{ action.request.sender.avatar_url }}">
+        </div>
+
+        <div class="mdl-card__supporting-text text">
+           <b>Created by</b>: {{action.request.sender.login }}
+            <br><b>at:</b> {{ action.request.issue.updated_at }}
+      </div>
+
+  </div>
+</div>
