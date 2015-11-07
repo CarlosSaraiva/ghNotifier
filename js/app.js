@@ -16,51 +16,25 @@ ghNotifier.config(function ($routeProvider) {
         });
 });
 
-ghNotifier.service('db', ['$http', '$rootScope',
-    function ($http, $rootScope) {
+ghNotifier.service('db', ['$http', '$rootScope', '$q',
+
+    function ($http, $q) {
         "use strict";
-        var data,
-            counter;
 
-        this.getData = function () {
-            return data;
-        };
-
-        this.getCounter = function () {
-            return counter;
-        };
-
-        this.getJson = function () {
-            $http.get('https://ghnotifier.herokuapp.com/action/issues')
-                .success(function (json) {
-                    data = json;
-                    $rootScope.$broadcast('dataupdated');
-                    console.log('ng - Event \'dataupdated\'  triggered.');
-                })
-                .error(function (error) {
+        this.getData = function (action) {
+            return $http.get('https://ghnotifier.herokuapp.com/action/' + action)
+                .then(function (result) {
+                    return result;
+                }, function (error) {
                     console.log(error);
+                    return $q.reject('Não foi possivel acessar o servidor.');
                 });
         };
 
-        this.getCounterJson = function () {
-            $http.get('https://ghnotifier.herokuapp.com/action/counter')
-                .success(function (json) {
-                    counter = JSON.parse(json);
-                    $rootScope.$broadcast('counterupdated');
-                    console.log('ng - Event \'counterupdated\'  triggered.');
-                })
-                .error(function (error) {
-                    console.log(error);
-                });
-        };
+    }]);
 
-        this.getCounterJson();
-        this.getJson();
-    }
-]);
-
-ghNotifier.factory('IO', ['db',
-    function (db) {
+ghNotifier.factory('IO', ['db', 'rootScope',
+    function (db, $rootScope) {
         "use strict";
         var socket = io("https://ghnotifier.herokuapp.com/");
 
@@ -73,6 +47,7 @@ ghNotifier.factory('IO', ['db',
 
         socket.on('ondbgroupby', function () {
             console.log('io - Event \'onnewrequest\' triggered.');
+            $rootScope.broadcast('oncounterupdated');
             socket.emit('message ', {
                 message: 'onnewrequest received.'
             });
@@ -80,7 +55,7 @@ ghNotifier.factory('IO', ['db',
 
         socket.on('onnewrequest', function () {
             console.log('io - Event \'ondbgroupby\' triggered.');
-            db.getCounterJson();
+            $rootScope.broadcast('onnewarrivedaction');
             socket.emit('message ', {
                 message: 'ondbgroupby received.'
             });
@@ -88,22 +63,26 @@ ghNotifier.factory('IO', ['db',
         });
 
         return socket;
-    }
-]);
+    }]);
 
-ghNotifier.controller('MainController', function ($scope, db, $rootScope, IO) {
+ghNotifier.controller('MainController', function ($scope, db, $rootScope) {
     "use strict";
-    $rootScope.$on('counterupdated', function () {
-        $scope.counter = db.getCounter();
+
+    $rootScope.emit(db.getData('counter').then(function (result) {
+        $scope.counter = JSON.parse(result.data);
+    }, function (error) {
+        $scope.counter = error;
     });
-    $scope.counter = db.getCounter();
+
 });
 
-ghNotifier.controller('IssuesController', function ($scope, db, $rootScope) {
+ghNotifier.controller('IssuesController', function ($scope, db) {
     "use strict";
-    $rootScope.$on('dataupdated', function () {
-        $scope.actions = db.getData();
-        console.log($scope.actions);
+
+    db.getData('issues').then(function (result) {
+        $scope.counter = JSON.parse(result.data);
+    }, function (error) {
+        $scope.counter = error;
     });
-    $scope.actions = db.getData();
+
 });
